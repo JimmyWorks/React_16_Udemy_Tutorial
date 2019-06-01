@@ -1,4 +1,5 @@
 import React from 'react';
+import './Person.css';
 // Don't have to import { Component } since this is not a class that extends components
 // Need this import to use React.createElement
 
@@ -9,9 +10,10 @@ import React from 'react';
 //   is named "props" here (which can be named anything)
 const person = (props) => {
     return (
-        <div>
-            <p>I'm {props.name} and I am {props.age}! </p>
+        <div className='Person'>
+            <p onClick={props.click}>Name: {props.name} <br></br> Age: {props.age} </p>
             <p>{props.children}</p>
+            <input type="text" onChange={props.changed} value={props.name}/>
         </div>
     )
 }

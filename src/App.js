@@ -1,52 +1,80 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect} from 'react';
 import './App.css';
 import Person from './Person/Person'
 
 // This class extends component which is why it is specified in the import
-class App extends Component {
+const app = (props) => {
 
-    // States are only available by extending Component
-    // It is a special property
-    state = {
-        // State properties
-        // Array of persons
-        persons: [
-            { name: 'John', age: 28 },
-            { name: 'Jimmy', age: 30 },
-            { name: 'Berenice', age: 29 }
-        ]
-    }
+  const [personState, setPersonState] = useState({
+    persons: [
+        { name:     'John', age: 28 },
+        { name:    'Jimmy', age: 30 },
+        { name: 'Berenice', age: 29 }
+    ]
+  });
 
-    switchNameHandler = () => {
-      this.setState(
-        {
-          persons: [
-            { name: 'John', age: 29 },
-            { name: 'Jimmy', age: 31 },
-            { name: 'Berenice', age: 30 }
-          ]
-        }
-      );
-    }
+  const [otherState, setOtherState] = useState('some other value');
 
-    render() {
-        // This uses React.createElement under the hood
-        // Everything in a .js (or .jsx) file is actually compiled by React
-        // Anything that looks like html is actually jsx code that is compiled into
-        // real html later
-        return (
-            <div className="App">
-                <h1> This is cool! </h1>
-                <p> This is actually jsx translated to html!</p>
-                <button onClick={this.switchNameHandler}>Switch Name</button>
-                <Person name={this.state.persons[0].name} age={this.state.persons[0].age} />
-                <Person name={this.state.persons[1].name} age={this.state.persons[1].age}> My Hobbies: Dancing </Person>
-                <Person name={this.state.persons[2].name} age={this.state.persons[2].age}/>
-      </div>
+
+  console.log(personState, otherState);
+
+  const switchNameHandler = (named, position) => {
+    console.log(named, position);
+    let currentState = {...personState};
+    console.log(currentState);
+    const newPerson = {name: named, age: currentState.persons[position].age};
+    currentState.persons[position] = newPerson;
+
+    console.log("new state:", currentState);
+
+    setPersonState(
+      currentState
     );
-	// This is actually what happens:
-	// return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hi, I\'m a React App!!!'));
-  }
-}
+  };
 
-export default App;
+  const nameChangedHandler = (event, index) => {
+    console.log(event, index);
+    setPersonState({
+      persons: [
+          { name: event.target.value, age: 29 },
+          { name: 'Jimmy', age: 31 },
+          { name: 'Berenice', age: 30 }
+      ]
+    })
+  }
+
+  const style = {
+    backgroundColor: 'white',
+    font: 'inherit',
+    border: '1px solid blue',
+    padding: '8px',
+    cursor: 'pointer'
+  };
+
+  return (
+    <div className="App">
+          <h1> This is cool! </h1>
+          <button
+            style={style} 
+            onClick={switchNameHandler.bind(this, 'Johnny', 0)}>Switch First Person to Johnny</button>
+          <Person 
+            name={personState.persons[0].name} 
+            age={personState.persons[0].age} 
+            click={switchNameHandler.bind(this, "Johnny", 0)}
+            changed={nameChangedHandler}
+            />
+            <p>The cards below currently do not support dynamic name change... TODO</p>
+          <Person 
+            name={personState.persons[1].name} 
+            age={personState.persons[1].age}
+            click={switchNameHandler.bind(this, "James", 1)} >
+            My Hobbies: Dancing 
+          </Person>
+          <Person 
+            name={personState.persons[2].name} 
+            age={personState.persons[2].age}/>
+    </div>
+  );
+};
+
+export default app;
